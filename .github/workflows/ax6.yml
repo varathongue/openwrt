@@ -1,4 +1,4 @@
-name: Build IPQ807x NSS
+name: Ax6 Passwall2
 
 on: workflow_dispatch
 
