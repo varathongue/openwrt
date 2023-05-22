@@ -74,6 +74,8 @@ jobs:
     release:
           name: Make a release
           runs-on: ubuntu-latest
+          permissions:
+            contents: write
           needs: build
 
           steps:
