@@ -10,8 +10,6 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-              with: 
-                ref: 'openwrt-22.03' 
 
             - name: Update and install feeds
               run: |
@@ -20,7 +18,7 @@ jobs:
 
             - name: Import full config for IPQ807x NSS Generic
               run: |
-                mv .full_config .config
+                mv .ax6s_config .config
 
             - name: QoL fixes on default config
               run: |
@@ -76,7 +74,7 @@ jobs:
             - name: Download the image artifacts
               uses: actions/download-artifact@v3
               with:
-                name: ipq807x-images
+                name: ax6s-images
 
             - name: Extract the image artifacts
               run: tar xf ax6s-images.tar
