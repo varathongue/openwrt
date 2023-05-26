@@ -10,17 +10,23 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-
+            - name: Add repos
+              run: |
+                cat << "EOF" >> feeds.conf.default
+                src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
+                src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
+                EOF
+                
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
 
-            - name: Import full config for IPQ807x NSS Generic
+            - name: Import full config for Ax6s Generic
               run: |
                 mv .ax6s_config .config
 
-            - name: QoL fixes on default config
+            - name: fixes on default config
               run: |
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
                 uci set wireless.@wifi-device[0].disabled="0"
@@ -137,7 +143,7 @@ jobs:
     release:
           name: Make a release
           runs-on: ubuntu-latest
-          needs: build-ax6s
+          needs: [build-ax6s,build-rt3200]
 
           steps:
             - name: Download the image artifacts
