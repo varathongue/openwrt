@@ -131,7 +131,7 @@ jobs:
                 make V=s
 
             - name: TAR output
-              run: tar -cvf 1900acs-images.tar bin/targets/mediatek/mt7622
+              run: tar -cvf 1900acs-images.tar bin/targets/mvebu/cortexa9
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
