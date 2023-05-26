@@ -3,7 +3,7 @@ name: Build Passwall
 on: workflow_dispatch
 
 jobs:
-    build_ax6s:
+    build-ax6s:
         name: Prepare and build Ax6s images
         runs-on: ubuntu-latest
 
@@ -68,7 +68,7 @@ jobs:
     release:
           name: Make a release
           runs-on: ubuntu-latest
-          needs: build
+          needs: build-ax6s
 
           steps:
             - name: Download the image artifacts
