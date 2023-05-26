@@ -131,7 +131,7 @@ jobs:
                 make V=s
 
             - name: TAR output
-              run: tar -cvf ax6s-images.tar bin/targets/mediatek/mt7622
+              run: tar -cvf rt3200-images.tar bin/targets/mediatek/mt7622
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
@@ -146,13 +146,21 @@ jobs:
           needs: [build-ax6s,build-rt3200]
 
           steps:
-            - name: Download the image artifacts
+            - name: Download the ax6s image artifacts
               uses: actions/download-artifact@v3
               with:
                 name: ax6s-images
-
+                
             - name: Extract the image artifacts
               run: tar xf ax6s-images.tar
+              
+            - name: Download the rt3200 image artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: rt3200-images
+
+            - name: Extract the image artifacts
+              run: tar xf rt3200-images.tar
 
             - name: Get the current date
               run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
