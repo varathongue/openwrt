@@ -1,10 +1,10 @@
-name: Build IPQ807x NSS
+name: Build Passwall
 
 on: workflow_dispatch
 
 jobs:
-    build:
-        name: Prepare and build IPQ807x NSS generic images
+    build_ax6s:
+        name: Prepare and build Ax6s images
         runs-on: ubuntu-latest
 
         steps:
@@ -22,16 +22,21 @@ jobs:
 
             - name: QoL fixes on default config
               run: |
-                mkdir -p files/etc/uci-defaults
-                cat > files/etc/uci-defaults/xxx_config << EOF
-                uci set wireless.radio0.country='US'
-                uci set wireless.radio1.country='US'
-                uci set wireless.radio2.country='US'
-                uci set wireless.radio1.disabled=0
-                uci set wireless.radio2.disabled=0
-                uci set network.globals.packet_steering=1
-                uci commit
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
+                uci set wireless.@wifi-device[0].disabled="0"
+                uci set wireless.@wifi-iface[0].disabled="0"
+                uci set wireless.@wifi-iface[0].ssid="OpenWrt"
+                uci set wireless.@wifi-iface[0].key="Openwrt_Persian"
+                uci set wireless.@wifi-iface[0].encryption="psk2"
+                uci commit wireless
                 EOF
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/22_lan_config
+                uci set network.lan.ipaddr=192.168.22.1
+                uci commit network
+                EOF
+                sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
 
             - name: Download package sources
               run: make download V=s
@@ -52,13 +57,13 @@ jobs:
                 make V=s
 
             - name: TAR output
-              run: tar -cvf ipq807xx-images.tar bin/targets/ipq807x/generic
+              run: tar -cvf ax6s-images.tar bin/targets/mediatek/mt7622
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
               with:
-                name: ipq807x-images
-                path: ipq807xx-images.tar
+                name: ax6s-images
+                path: ax6s-images.tar
 
     release:
           name: Make a release
@@ -72,7 +77,7 @@ jobs:
                 name: ipq807x-images
 
             - name: Extract the image artifacts
-              run: tar xf ipq807xx-images.tar
+              run: tar xf ax6s-images.tar
 
             - name: Get the current date
               run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
@@ -82,8 +87,8 @@ jobs:
               with:
                 name: "Updated prebuilt images ${{ env.NOW }}"
                 commit: "master"
-                tag: "ipq807x-${{ env.NOW }}"
+                tag: "ax6s-${{ env.NOW }}"
                 generateReleaseNotes: true
                 makeLatest: true
-                artifacts: bin/targets/ipq807x/generic/*
+                artifacts: bin/targets/mediatek/mt7622/*
                 token: "${{ secrets.GITHUB_TOKEN }}"
