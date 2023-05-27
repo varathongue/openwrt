@@ -171,5 +171,5 @@ jobs:
                 tag: "ax6s-${{ env.NOW }}"
                 generateReleaseNotes: true
                 makeLatest: true
-                artifacts: "openwrt*"
+                artifacts: ./openwrt*
                 token: "${{ secrets.GITHUB_TOKEN }}"
