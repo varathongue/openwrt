@@ -1,4 +1,4 @@
-name: Build stack
+name: Build x86
 
 on: workflow_dispatch
 
