@@ -58,7 +58,7 @@ jobs:
                 make V=s
                 
             - name: Checksum Trim
-              run: grep -i sysupgrade bin/targets/mediatek/mt7622 >bin/targets/mediatek/mt7622/sysupgrade.checksum
+              run: grep -i sysupgrade bin/targets/mediatek/mt7622/sha256sums >bin/targets/mediatek/mt7622/sysupgrade.checksum
               
             - name: TAR output
               run: tar -cvf ax6s-images.tar bin/targets/mvebu/cortexa9/*sysupgrade*
@@ -122,6 +122,8 @@ jobs:
               run: |
                 make -j$(nproc) V=s || \
                 make V=s
+            - name: Checksum Trim
+              run: grep -i sysupgrade bin/targets/mediatek/mt7622/sha256sums >bin/targets/mediatek/mt7622/sysupgrade.checksum
             - name: TAR output
               run: tar -cvf rt3200-images.tar bin/targets/mediatek/mt7622
 
@@ -171,5 +173,5 @@ jobs:
                 tag: "ax6s-${{ env.NOW }}"
                 generateReleaseNotes: true
                 makeLatest: true
-                artifacts: ./openwrt*
+                artifacts: openwrt*
                 token: "${{ secrets.GITHUB_TOKEN }}"
