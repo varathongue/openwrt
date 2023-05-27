@@ -1,0 +1,255 @@
+name: Build x86
+
+on: workflow_dispatch
+
+jobs:
+
+    build-x86:
+        name: build x86 image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Add repos
+              run: |
+                cat << "EOF" >> feeds.conf.default
+                src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
+                src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
+                EOF
+                
+            - name: Update and install feeds
+              run: |
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a
+            - name: Import full config for x86 Generic
+              run: |
+                mv .x86_config .config
+            - name: fixes on default config
+              run: |
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
+                uci set wireless.@wifi-device[0].disabled="0"
+                uci set wireless.@wifi-iface[0].disabled="0"
+                uci set wireless.@wifi-iface[0].ssid="OpenWrt"
+                uci set wireless.@wifi-iface[0].key="Openwrt_Persian"
+                uci set wireless.@wifi-iface[0].encryption="psk2"
+                uci commit wireless
+                EOF
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/22_lan_config
+                uci set network.lan.ipaddr=192.168.22.1
+                uci commit network
+                EOF
+                sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+            - name: Download package sources
+              run: make download V=s
+
+            - name: Build tools
+              run: |
+                make tools/install -j$(nproc) V=s || \
+                make tools/install V=s
+            - name: Build toolchain
+              run: |
+                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install V=s
+            - name: Build target images
+              run: |
+                make -j$(nproc) V=s || \
+                make V=s
+                
+            - name: Checksum Trim
+              run: grep -i combined bin/targets/x86/generic/sha256sums >bin/targets/x86/generic/combined.checksum
+              
+            - name: TAR output
+              run: tar -cvf x86-images.tar bin/targets/x86/generic/*combined*
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: x86-images
+                path: x86-images.tar
+    build-x86-64:
+        name: build x86-64 image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Add repos
+              run: |
+                cat << "EOF" >> feeds.conf.default
+                src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
+                src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
+                EOF
+                
+            - name: Update and install feeds
+              run: |
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a
+            - name: Import full config for x86-64 Generic
+              run: |
+                mv .x86-64_config .config
+            - name: fixes on default config
+              run: |
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
+                uci set wireless.@wifi-device[0].disabled="0"
+                uci set wireless.@wifi-iface[0].disabled="0"
+                uci set wireless.@wifi-iface[0].ssid="OpenWrt"
+                uci set wireless.@wifi-iface[0].key="Openwrt_Persian"
+                uci set wireless.@wifi-iface[0].encryption="psk2"
+                uci commit wireless
+                EOF
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/22_lan_config
+                uci set network.lan.ipaddr=192.168.22.1
+                uci commit network
+                EOF
+                sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+            - name: Download package sources
+              run: make download V=s
+
+            - name: Build tools
+              run: |
+                make tools/install -j$(nproc) V=s || \
+                make tools/install V=s
+            - name: Build toolchain
+              run: |
+                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install V=s
+            - name: Build target images
+              run: |
+                make -j$(nproc) V=s || \
+                make V=s
+                
+            - name: Checksum Trim
+              run: grep -i combined bin/targets/x86/64/sha256sums >bin/targets/x86/64/combined.checksum
+              
+            - name: TAR output
+              run: tar -cvf x64-images.tar bin/targets/x86/64/*combined*
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: x64-images
+                path: x64-images.tar
+
+    build-x86-legacy:
+        name: build legacy x86 image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Add repos
+              run: |
+                cat << "EOF" >> feeds.conf.default
+                src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
+                src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
+                EOF
+                
+            - name: Update and install feeds
+              run: |
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a
+            - name: Import full config for x86-legacy Generic
+              run: |
+                mv .x86-legacy_config .config
+            - name: fixes on default config
+              run: |
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
+                uci set wireless.@wifi-device[0].disabled="0"
+                uci set wireless.@wifi-iface[0].disabled="0"
+                uci set wireless.@wifi-iface[0].ssid="OpenWrt"
+                uci set wireless.@wifi-iface[0].key="Openwrt_Persian"
+                uci set wireless.@wifi-iface[0].encryption="psk2"
+                uci commit wireless
+                EOF
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/22_lan_config
+                uci set network.lan.ipaddr=192.168.22.1
+                uci commit network
+                EOF
+                sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+            - name: Download package sources
+              run: make download V=s
+
+            - name: Build tools
+              run: |
+                make tools/install -j$(nproc) V=s || \
+                make tools/install V=s
+            - name: Build toolchain
+              run: |
+                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install V=s
+            - name: Build target images
+              run: |
+                make -j$(nproc) V=s || \
+                make V=s
+                
+            - name: Checksum Trim
+              run: grep -i combined bin/targets/x86/legacy/sha256sums >bin/targets/x86/generic/combined.checksum
+              
+            - name: TAR output
+              run: tar -cvf x86-legacy-images.tar bin/targets/x86/legacy/*combined*
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: x86-legacy-images
+                path: x86-legacy-images.tar
+    release:
+          name: Make a release
+          runs-on: ubuntu-latest
+          needs: [build-x86,build-x86-64,build-x86-legacy]
+
+          steps:
+            - name: Download the x86 image artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: x86-images
+                
+            - name: Extract the image artifacts
+              run: tar xf x86-images.tar --strip-components=4
+              
+            - name: Add checksum to list
+              run: cat combined.checksum >> openwrt.sha256sum
+              
+            - name: Download the rt3200 image artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: x86-64-images
+
+            - name: Extract the image artifacts
+              run: tar xf x86-64-images.tar --strip-components=4
+              
+            - name: Add checksum to list
+              run: cat combined.checksum >> openwrt.sha256sum
+
+            - name: Download the x86-legacy image artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: x86-legacy-images
+
+            - name: Extract the image artifacts
+              run: tar xf x86-legacy-images.tar --strip-components=4
+              
+            - name: Add checksum to list
+              run: cat combined.checksum >> openwrt.sha256sum
+
+
+            - name: Get the current date
+              run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
+
+            - name: Create a release
+              uses: "ncipollo/release-action@v1"
+              with:
+                name: "Updated prebuilt images ${{ env.NOW }}"
+                commit: "master"
+                tag: "ax6s-${{ env.NOW }}"
+                generateReleaseNotes: true
+                makeLatest: true
+                artifacts: openwrt*
+                token: "${{ secrets.GITHUB_TOKEN }}"
