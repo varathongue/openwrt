@@ -101,5 +101,5 @@ jobs:
                 tag: "1900acs-${{ env.NOW }}"
                 generateReleaseNotes: true
                 makeLatest: true
-                artifacts: open*sysupgrade*
+                artifacts: "*sysupgrade*,openwrt-1900acs-sysupgrade"
                 token: "${{ secrets.GITHUB_TOKEN }}"
