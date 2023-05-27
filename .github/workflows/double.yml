@@ -61,7 +61,7 @@ jobs:
               run: grep -i sysupgrade bin/targets/mediatek/mt7622/sha256sums >bin/targets/mediatek/mt7622/sysupgrade.checksum
               
             - name: TAR output
-              run: tar -cvf ax6s-images.tar bin/targets/mvebu/cortexa9/*sysupgrade*
+              run: tar -cvf ax6s-images.tar bin/targets/mediatek/mt7622/*sysupgrade*
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
@@ -125,7 +125,7 @@ jobs:
             - name: Checksum Trim
               run: grep -i sysupgrade bin/targets/mediatek/mt7622/sha256sums >bin/targets/mediatek/mt7622/sysupgrade.checksum
             - name: TAR output
-              run: tar -cvf rt3200-images.tar bin/targets/mediatek/mt7622
+              run: tar -cvf rt3200-images.tar bin/targets/mediatek/mt7622/*sysupgrade*
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
