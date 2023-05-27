@@ -17,7 +17,8 @@ jobs:
                 src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
-                
+            - name: Update and install feeds
+              run: sudo apt install qemu-utils             
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
@@ -82,7 +83,8 @@ jobs:
                 src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
-                
+            - name: Update and install feeds
+              run: sudo apt install qemu-utils  
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
@@ -148,7 +150,8 @@ jobs:
                 src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
-                
+            - name: Update and install feeds
+              run: sudo apt install qemu-utils  
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
