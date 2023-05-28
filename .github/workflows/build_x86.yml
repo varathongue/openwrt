@@ -232,7 +232,7 @@ jobs:
             - name: Add checksum to list
               run: cat combined.checksum >> openwrt.sha256sum
               
-            - name: Download the rt3200 image artifacts
+            - name: Download the x86-64 image artifacts
               uses: actions/download-artifact@v3
               with:
                 name: x86-64-images
@@ -253,7 +253,6 @@ jobs:
               
             - name: Add checksum to list
               run: cat combined.checksum >> openwrt.sha256sum
-
 
             - name: Get the current date
               run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
