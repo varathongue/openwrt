@@ -25,7 +25,8 @@ jobs:
                 ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for x86 Generic
               run: |
-                mv .x86_config .config
+                mv .x86_config .config && \
+                make defconfig
             - name: fixes on default config
               run: |
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
@@ -94,7 +95,8 @@ jobs:
                 ./scripts/feeds install -a
             - name: Import full config for x86-64 Generic
               run: |
-                mv .x86-64_config .config
+                mv .x86-64_config .config && \
+                make defconfig
             - name: fixes on default config
               run: |
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
@@ -164,7 +166,8 @@ jobs:
                 ./scripts/feeds install -a
             - name: Import full config for x86-legacy Generic
               run: |
-                mv .x86-legacy_config .config
+                mv .x86-legacy_config .config && \
+                make defconfig
             - name: fixes on default config
               run: |
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
