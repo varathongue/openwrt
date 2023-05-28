@@ -235,10 +235,10 @@ jobs:
             - name: Download the rt3200 image artifacts
               uses: actions/download-artifact@v3
               with:
-                name: x86-64-images
+                name: x64-images
 
             - name: Extract the image artifacts
-              run: tar xf x86-64-images.tar --strip-components=4
+              run: tar xf x64-images.tar --strip-components=4
               
             - name: Add checksum to list
               run: cat combined.checksum >> openwrt.sha256sum
