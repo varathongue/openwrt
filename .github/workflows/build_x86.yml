@@ -21,8 +21,8 @@ jobs:
               run: sudo apt update && sudo apt install qemu-utils -y        
             - name: Update and install feeds
               run: |
-                ./scripts/feeds update -a
-                ./scripts/feeds install -a
+                ./scripts/feeds update -a && ./scripts/feeds update -a
+                ./scripts/feeds install -a && /scripts/feeds install -a 
             - name: Import full config for x86 Generic
               run: |
                 mv .x86_config .config
@@ -48,15 +48,18 @@ jobs:
 
             - name: Build tools
               run: |
-                make tools/install -j$(nproc) V=s || \
-                make tools/install V=s
+                make tools/install -j$(nproc) || \
+                make tools/install -j$(nproc) || \ 
+                make toolchain/install V=s 
             - name: Build toolchain
               run: |
-                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install -j$(nproc) || \
+                make toolchain/install -j$(nproc) || \
                 make toolchain/install V=s
             - name: Build target images
               run: |
-                make -j$(nproc) V=s || \
+                make -j$(nproc) || \
+                make -j$(nproc) || \
                 make V=s
                 
             - name: Checksum Trim
@@ -114,15 +117,18 @@ jobs:
 
             - name: Build tools
               run: |
-                make tools/install -j$(nproc) V=s || \
+                make tools/install -j$(nproc) || \
+                make tools/install -j$(nproc) || \
                 make tools/install V=s
             - name: Build toolchain
               run: |
-                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install -j$(nproc) || \
+                make toolchain/install -j$(nproc) || \
                 make toolchain/install V=s
             - name: Build target images
               run: |
-                make -j$(nproc) V=s || \
+                make -j$(nproc) || \
+                make -j$(nproc) || \
                 make V=s
                 
             - name: Checksum Trim
@@ -181,15 +187,18 @@ jobs:
 
             - name: Build tools
               run: |
-                make tools/install -j$(nproc) V=s || \
+                make tools/install -j$(nproc) || \
+                make tools/install -j$(nproc) || \
                 make tools/install V=s
             - name: Build toolchain
               run: |
-                make toolchain/install -j$(nproc) V=s || \
+                make toolchain/install -j$(nproc) || \
+                make toolchain/install -j$(nproc) || \
                 make toolchain/install V=s
             - name: Build target images
               run: |
-                make -j$(nproc) V=s || \
+                make -j$(nproc) || \
+                make -j$(nproc) || \
                 make V=s
                 
             - name: Checksum Trim
