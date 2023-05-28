@@ -142,8 +142,8 @@ jobs:
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
               with:
-                name: x64-images
-                path: x64-images.tar
+                name: x86-64-images
+                path: x86-64-images.tar
 
     build-x86-legacy:
         name: build legacy x86 image
