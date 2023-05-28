@@ -193,7 +193,7 @@ jobs:
                 make V=s
                 
             - name: Checksum Trim
-              run: grep -i combined bin/targets/x86/legacy/sha256sums >bin/targets/x86/generic/combined.checksum
+              run: grep -i combined bin/targets/x86/legacy/sha256sums >bin/targets/x86/legacy/combined.checksum
               
             - name: TAR output
               run: tar -cvf x86-legacy-images.tar bin/targets/x86/legacy/*combined*
