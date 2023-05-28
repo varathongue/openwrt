@@ -18,7 +18,7 @@ jobs:
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
             - name: Update and install feeds
-              run: sudo apt update && sudo apt install qemu-utils -y        
+              run: sudo apt update && sudo apt install qemu-utils libelf-dev -y        
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a && ./scripts/feeds update -a
@@ -87,7 +87,7 @@ jobs:
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
             - name: Update and install feeds
-              run: sudo apt update && sudo apt install qemu-utils -y
+              run: sudo apt update && sudo apt install qemu-utils libelf-dev -y
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
@@ -157,7 +157,7 @@ jobs:
                 src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
                 EOF
             - name: Update and install feeds
-              run: sudo apt update && sudo apt install qemu-utils -y
+              run: sudo apt update && sudo apt install qemu-utils libelf-dev -y
             - name: Update and install feeds
               run: |
                 ./scripts/feeds update -a
