@@ -91,8 +91,8 @@ jobs:
               run: sudo apt update && sudo apt install qemu-utils libelf-dev -y
             - name: Update and install feeds
               run: |
-                ./scripts/feeds update -a
-                ./scripts/feeds install -a
+                ./scripts/feeds update -a && ./scripts/feeds update -a
+                ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for x86-64 Generic
               run: |
                 mv .x86-64_config .config && \
@@ -137,7 +137,7 @@ jobs:
               run: grep -i combined bin/targets/x86/64/sha256sums >bin/targets/x86/64/combined.checksum
               
             - name: TAR output
-              run: tar -cvf x64-images.tar bin/targets/x86/64/*combined*
+              run: tar -cvf x86-64-images.tar bin/targets/x86/64/*combined*
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
@@ -162,8 +162,8 @@ jobs:
               run: sudo apt update && sudo apt install qemu-utils libelf-dev -y
             - name: Update and install feeds
               run: |
-                ./scripts/feeds update -a
-                ./scripts/feeds install -a
+                 ./scripts/feeds update -a && ./scripts/feeds update -a
+                 ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for x86-legacy Generic
               run: |
                 mv .x86-legacy_config .config && \
@@ -235,10 +235,10 @@ jobs:
             - name: Download the rt3200 image artifacts
               uses: actions/download-artifact@v3
               with:
-                name: x64-images
+                name: x86-64-images
 
             - name: Extract the image artifacts
-              run: tar xf x64-images.tar --strip-components=4
+              run: tar xf x86-64-images.tar --strip-components=4
               
             - name: Add checksum to list
               run: cat combined.checksum >> openwrt.sha256sum
