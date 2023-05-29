@@ -1,0 +1,96 @@
+name: Build ax6s
+
+on: workflow_dispatch
+
+jobs:
+
+    build-ax6s:
+        name: build ax6s image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Add repos
+              run: |
+                cat << "EOF" >> feeds.conf.default
+                src-git-full passwall https://github.com/xiaorouji/openwrt-passwall.git
+                src-git-full passwall2 https://github.com/xiaorouji/openwrt-passwall2.git
+                EOF
+            - name: Update and install feeds
+              run: sudo apt update && sudo apt install qemu-utils libelf-dev -y        
+            - name: Update and install feeds
+              run: |
+                ./scripts/feeds update -a && ./scripts/feeds update -a
+                ./scripts/feeds install -a && ./scripts/feeds install -a 
+            - name: Import full config for ax6s
+              run: |
+                mv .ax6s_config .config && \
+                make defconfig
+            - name: fixes on default config
+              run: |
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
+                uci set wireless.@wifi-device[0].disabled="0"
+                uci set wireless.@wifi-iface[0].disabled="0"
+                uci set wireless.@wifi-iface[0].ssid="OpenWrt"
+                uci set wireless.@wifi-iface[0].key="Openwrt_Persian"
+                uci set wireless.@wifi-iface[0].encryption="psk2"
+                uci commit wireless
+                EOF
+                cat << "EOF" > package/base-files/files/etc/uci-defaults/22_lan_config
+                uci set network.lan.ipaddr=192.168.22.1
+                uci commit network
+                EOF
+                sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+            - name: Download package sources
+              run: make download V=s
+
+            - name: Build tools
+              run: |
+                make -j$(nproc) || \
+                make -j$(nproc) || \
+                make V=s
+                
+            - name: Checksum Trim
+              run: grep -i sysupgrade bin/targets/mediatek/mt7622/sha256sums >bin/targets/mediatek/mt7622/sysupgrade.checksum
+              
+            - name: TAR output
+              run: tar -cvf ax6s-images.tar bin/targets/mediatek/mt7622/*sysupgrade*
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: ax6s-images
+                path: ax6s-images.tar
+    release:
+          name: Make a release
+          runs-on: ubuntu-latest
+          needs: [build-ax6s]
+
+          steps:
+            - name: Download the ax6s image artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: ax6s-images
+                
+            - name: Extract the image artifacts
+              run: tar xf ax6s-images.tar --strip-components=4
+              
+            - name: Add checksum to list
+              run: cat sysupgrade.checksum >> openwrt.sha256sum
+
+            - name: Get the current date
+              run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
+
+            - name: Create a release
+              uses: "ncipollo/release-action@v1"
+              with:
+                name: "Updated prebuilt images for ax6s ${{ env.NOW }}"
+                commit: "master"
+                tag: "ax6s-${{ env.NOW }}"
+                generateReleaseNotes: true
+                makeLatest: true
+                artifacts: openwrt*
+                token: "${{ secrets.GITHUB_TOKEN }}"
