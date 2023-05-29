@@ -31,6 +31,18 @@ jobs:
                 make defconfig
             - name: fixes on default config
               run: |
+                cat << "EOF" > package/base-files/files/etc/banner
+                t.me/
+                .___                     __      _______________________
+                |   |___________    ____/  \    /  \______   \__    ___/
+                |   \_  __ \__  \  /    \   \/\/   /|       _/ |    |   
+                |   ||  | \// __ \|   |  \        / |    |   \ |    |   
+                |___||__|  (____  /___|  /\__/\  /  |____|_  / |____|   
+                WireLess FREEDOM\/     \/      \/          \/          
+                -----------------------------------------------------
+                 %D %V, %C
+                -----------------------------------------------------
+                EOF
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
                 uci set wireless.@wifi-device[0].disabled="0"
                 uci set wireless.@wifi-iface[0].disabled="0"
