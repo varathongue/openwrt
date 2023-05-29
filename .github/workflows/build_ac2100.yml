@@ -25,7 +25,9 @@ jobs:
                 ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for ac2100
               run: |
-                mv .config_ac2100 .config && \
+                mv ir-geosite feeds/packages/net/v2ray-geodata/Makefile
+                mv .config_ac2100 .config
+                ./scripts/feeds install -a && ./scripts/feeds install -a
                 make defconfig
             - name: fixes on default config
               run: |
