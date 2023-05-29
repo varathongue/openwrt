@@ -54,10 +54,10 @@ jobs:
                 make V=s
                 
             - name: Checksum Trim
-              run: grep -i sysupgrade bin/targets/sunxi/cortexa7/sha256sums >bin/targets/sunxi/cortexa7/sysupgrade.checksum
+              run: grep -i nanopi-r1 bin/targets/sunxi/cortexa7/sha256sums >bin/targets/sunxi/cortexa7/nanopi-r1.checksum
               
             - name: TAR output
-              run: tar -cvf nanopi-r1-images.tar bin/targets/sunxi/cortexa7/*sysupgrade*
+              run: tar -cvf nanopi-r1-images.tar bin/targets/sunxi/cortexa7/*nanopi-r1*
 
             - name: Upload artifacts
               uses: actions/upload-artifact@v3
@@ -79,7 +79,7 @@ jobs:
               run: tar xf nanopi-r1-images.tar --strip-components=4
               
             - name: Add checksum to list
-              run: cat sysupgrade.checksum >> openwrt.sha256sum
+              run: cat nanopi-r1.checksum >> openwrt.sha256sum
 
             - name: Get the current date
               run: echo "NOW=$(date +%F-%H%M)" >> $GITHUB_ENV
