@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-only
-#
+# 
 # Copyright (C) 2021-2022 ImmortalWrt.org
 
 include $(TOPDIR)/rules.mk
@@ -30,13 +30,13 @@ define Download/geosite
   HASH:=505e214574f1ec516381cfa17a0c8d08d4bec03b3d3de7c4d06ff0e7fb479647
 endef
 
-GEOSITEIR_VER:=202305290026
-GEOSITEIR_FILE:=iran.dat.$(GEOSITEIR_VER)
+IRAN_GEOSITE_VER:=202305290026
+IRAN_GEOSITE_FILE:=iran.dat.$(IRAN_GEOSITE_VER)
 define Download/geosite-ir
-  URL:=https://github.com/bootmortis/iran-hosted-domains/releases/download/$(GEOSITEIR_VER)/
+  URL:=https://github.com/bootmortis/iran-hosted-domains/releases/download/$(IRAN_GEOSITE_VER)/
   URL_FILE:=iran.dat
-  FILE:=$(GEOSITEIR_FILE)
-  HASH:=505e214574f1ec516381cfa17a0c8d08d4bec03b3d3de7c4d06ff0e7fb479647
+  FILE:=$(IRAN_GEOSITE_FILE)
+  HASH:=461209f6fa72413e67fb4921ab350ea04876bdee21e8b7848da7e929845dba77
 endef
 
 define Package/v2ray-geodata/template
@@ -101,7 +101,7 @@ endef
 
 define Package/v2ray-geosite-ir/install
 	$(INSTALL_DIR) $(1)/usr/share/v2ray $(1)/usr/share/xray
-	$(INSTALL_DATA) $(DL_DIR)/$(GEOSITEIR_FILE) $(1)/usr/share/v2ray/iran.dat
+	$(INSTALL_DATA) $(DL_DIR)/$(IRAN_GEOSITE_FILE) $(1)/usr/share/v2ray/iran.dat
 	$(LN) ../v2ray/iran.dat $(1)/usr/share/xray/iran.dat
 endef
 
