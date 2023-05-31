@@ -57,7 +57,7 @@ jobs:
                 EOF
                 sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
                 sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
-                sed -i "s/geosite:cn/geosite:category-ir^M\next:iran.dat:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config                sed -i "s/geosite:cn/geosite:category-ir^M\next:iran.dat:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir^M\next:iran.dat:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
             - name: Download package sources
               run: make download V=s
 
