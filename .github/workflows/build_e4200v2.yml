@@ -26,7 +26,7 @@ jobs:
             - name: Import full config for e4200v2
               run: |
                 mv ir-geosite feeds/packages/net/v2ray-geodata/Makefile
-                mv .e4200v2_config .config
+                mv .config_e4200v2 .config
                 make defconfig
                 ./scripts/feeds install -a && ./scripts/feeds install -a
             - name: fixes on default config
