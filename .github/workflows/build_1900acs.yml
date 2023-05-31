@@ -25,10 +25,24 @@ jobs:
                 ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for 1900acs
               run: |
-                mv .config_1900acs .config && \
+                mv ir-geosite feeds/packages/net/v2ray-geodata/Makefile
+                mv .config_1900acs .config
+                ./scripts/feeds install -a && ./scripts/feeds install -a
                 make defconfig
             - name: fixes on default config
               run: |
+                cat << "EOF" > package/base-files/files/etc/banner
+                t.me/
+                .___                     __      _______________________
+                |   |___________    ____/  \    /  \______   \__    ___/
+                |   \_  __ \__  \  /    \   \/\/   /|       _/ |    |   
+                |   ||  | \// __ \|   |  \        / |    |   \ |    |   
+                |___||__|  (____  /___|  /\__/\  /  |____|_  / |____|   
+                WireLess FREEDOM\/     \/      \/          \/          
+                -----------------------------------------------------
+                 %D %V, %C
+                -----------------------------------------------------
+                EOF
                 cat << "EOF" > package/base-files/files/etc/uci-defaults/20_wifi_config
                 uci set wireless.@wifi-device[0].disabled="0"
                 uci set wireless.@wifi-iface[0].disabled="0"
@@ -43,7 +57,7 @@ jobs:
                 EOF
                 sed -i "s/China/Iran/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
                 sed -i "s/geoip:cn/geoip:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
-                sed -i "s/geosite:cn/geosite:category-ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
+                sed -i "s/geosite:cn/geosite:category-ir^M\next:iran.dat:ir/g" feeds/passwall2/luci-app-passwall2/root/usr/share/passwall2/0_default_config
             - name: Download package sources
               run: make download V=s
 
