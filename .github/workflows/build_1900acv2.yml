@@ -1,4 +1,4 @@
-name: Build wrt1900acv2
+name: Build 1900acv2
 
 on: workflow_dispatch
 
