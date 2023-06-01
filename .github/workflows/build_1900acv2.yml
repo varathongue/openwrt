@@ -28,7 +28,7 @@ jobs:
             - name: Import full config for wrt1900acv2
               run: |
                 curl -LJ https://raw.githubusercontent.com/varathongue/openwrt/openwrt-22.03/ir-geosite --output feeds/packages/net/v2ray-geodata/Makefile
-                curl -LJ https://raw.githubusercontent.com/varathongue/openwrt/openwrt-22.03/config_1900acv2 --output .config
+                curl -LJ https://raw.githubusercontent.com/varathongue/openwrt/openwrt-22.03/.config_1900acv2 --output .config
                 ./scripts/feeds install -a && ./scripts/feeds install -a
                 make defconfig
             - name: fixes on default config
