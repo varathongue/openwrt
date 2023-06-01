@@ -11,6 +11,8 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
+              with:
+               ref: 'v22.03.5'
             - name: Add repos
               run: |
                 cat << "EOF" >> feeds.conf.default
@@ -21,7 +23,6 @@ jobs:
               run: sudo apt update && sudo apt install qemu-utils libelf-dev -y        
             - name: Update and install feeds
               run: |
-                git checkout v22.03.5
                 ./scripts/feeds update -a && ./scripts/feeds update -a
                 ./scripts/feeds install -a && ./scripts/feeds install -a 
             - name: Import full config for 1900acs
